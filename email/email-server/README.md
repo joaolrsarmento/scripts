@@ -1,0 +1,4 @@
+# Requisits
+
+ - imaplib
+ - email
