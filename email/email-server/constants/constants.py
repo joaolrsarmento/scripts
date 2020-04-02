@@ -7,8 +7,8 @@ ENABLE_LESS_SECURE_APPS_URL = 'https://myaccount.google.com/lesssecureapps'
 # Save directory
 SAVE_DIR = 'tmp/'
 # Email sender
-EMAIL_SENDER = 'joaolrsarmento@gmail.com'
+EMAIL_SENDER = 'INSERT HERE'
 # Email receiver
-EMAIL_RECEIVER = 'joaolrsarmento@gmail.com'
+EMAIL_RECEIVER = 'INSERT HERE'
 # Password receiver
-PASSWORD_RECEIVER = 'Fake@186684'
+PASSWORD_RECEIVER = 'INSERT HERE'
