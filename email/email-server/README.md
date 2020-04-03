@@ -1,6 +1,6 @@
 # Requisits
 
- - OS: Windows as OS
+ - OS: Windows
  - module: imaplib
  - module: email
  - module: win32api
