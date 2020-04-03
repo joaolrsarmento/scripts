@@ -1,7 +1,9 @@
 # Requisits
 
- - Windows as OS
- - imaplib
- - email
- - win32api
- - win32print
+ OS: Windows as OS
+ module: imaplib
+ module: email
+ module: win32api
+ module: win32print
+
+# Remember to fill informations on the constants file. The info you should fill is marked with "INSERT HERE".
