@@ -1,11 +1,15 @@
-from constants.constants import GMAIL_HOST, GMAIL_PORT, EMAIL_RECEIVER, EMAIL_SENDER, ENABLE_LESS_SECURE_APPS_URL, SAVE_DIR, PASSWORD_RECEIVER
+from constants.constants import GMAIL_HOST, GMAIL_PORT, ENABLE_LESS_SECURE_APPS_URL, SAVE_DIR
 import imaplib, os, email
 
 class GmailAccount:
     """
     Represents an gmail account.
     """
-    def __init__(self):
+    def __init__(self, receiver, pw, sender):
+
+        self.receiver = receiver
+        self.password = pw
+        self.sender = sender
 
         self.__server = self.__connect()
 
@@ -35,7 +39,7 @@ class GmailAccount:
         server = imaplib.IMAP4_SSL(GMAIL_HOST, GMAIL_PORT)
         print('Logging in...')
         # Try username and password
-        server.login(EMAIL_RECEIVER, PASSWORD_RECEIVER)
+        server.login(self.receiver, self.password)
         # Select inbox only
         server.select('inbox')
         # Success
@@ -49,7 +53,7 @@ class GmailAccount:
         # Stores the paths to the attachments stored on the computer.
         attachments = []
         # Search data
-        resp, messages = server.search(None, 'UNSEEN', 'FROM', EMAIL_SENDER)
+        resp, messages = server.search(None, 'UNSEEN', 'FROM', self.sender)
         for message in messages[0].split():
             typ, data = server.fetch(message, '(RFC822)')
             # Decode
