@@ -1,11 +1,13 @@
-# import plataform
+import sys
 
 # This code should be useful only if you are using windows
-# if plataform.system() == 'Windows':
-import win32api
-import win32print
+try:
+    import win32api
+    import win32print
+except:
+    sys.exit()
 
-class Printer:
+class PrinterWindows:
     """
     Represents a printer.
     """

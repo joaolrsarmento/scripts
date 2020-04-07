@@ -43,7 +43,7 @@ class GmailAccount:
         # Select inbox only
         server.select('inbox')
         # Success
-        print('Logged.')
+        print(server.check())
         return server
 
     def __getAttachments(self, server) -> list:
