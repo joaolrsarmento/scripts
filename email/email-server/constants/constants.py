@@ -7,8 +7,8 @@ ENABLE_LESS_SECURE_APPS_URL = 'https://myaccount.google.com/lesssecureapps'
 # Save directory
 SAVE_DIR = 'tmp/'
 # Email sender
-EMAIL_SENDER = 'vilson.souta@gmail.com'
+EMAIL_SENDER = 'insert here'
 # Email receiver
-EMAIL_RECEIVER = 'redlanches.atendimento@gmail.com'
+EMAIL_RECEIVER = 'insert here'
 # Password receiver
-PASSWORD_RECEIVER = 'pizza2019'
+PASSWORD_RECEIVER = 'insert here'
