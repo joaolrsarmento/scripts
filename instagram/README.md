@@ -1,0 +1,1 @@
+# Script made to unfollow people that doesn't follow you back on instagram
