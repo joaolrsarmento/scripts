@@ -37,15 +37,19 @@ while True:
             print('Printing: ', attachment.split('/')[len(attachment.split('/')) - 1])
             # Print the attachment pdf
             printer.run(attachment)
-            print('Deleting...')
-            # Delete the attachment from the pc memmory
-            os.remove(attachment)
 
     except EOFError:
         # If EOF, quit server.
         account.quit()
+        # Deleting attachments
+        for attachment in attachments:
+            os.remove(attachment)
         break
     else:
         # Try again.
         print('Unable to connect. Trying again.')
         continue
+
+# Deleting attachments
+for attachment in attachments:
+    os.remove(attachment)
