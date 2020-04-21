@@ -1,11 +1,13 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
+from auth import Auth
+import datetime
 import json
 
 
 class InstaBot:
-    def __init__(self, username, pw):
+    def __init__(self):
         """
         This class contains some methods to do auto tasks using an instagram account.
         
@@ -15,25 +17,28 @@ class InstaBot:
         :type pw: string
 
         """
+        auth = Auth()
+        self.username, self.password = auth.get()
         # Get ChromeDriver
         self.driver = webdriver.Chrome(ChromeDriverManager().install())
         # Save username
-        self.username = username
         # Access the instagram on web
         self.driver.get("https://instagram.com")
         # Wait for the page to load
         sleep(2)
         # Input username
+        print('Logging in...')
         self.driver.find_element_by_xpath("//input[@name=\"username\"]")\
-            .send_keys(username)
+            .send_keys(self.username)
         # Input password
         self.driver.find_element_by_xpath("//input[@name=\"password\"]")\
-            .send_keys(pw)
+            .send_keys(self.password)
         # Login
         self.driver.find_element_by_xpath('//button[@type="submit"]')\
             .click()
         # Wait for the page to load
         sleep(4)
+        print('Logged')
         # Tests if the notification option has appeared
         try: 
             self.driver.find_element_by_xpath("//button[contains(text(), 'Agora não')]")\
@@ -41,6 +46,8 @@ class InstaBot:
             sleep(2)
         except:
             pass
+        # Saves info
+        self._get_info()
 
     def _get_info(self):
         """
@@ -51,21 +58,36 @@ class InstaBot:
             - not_following_back: usernames that is on following but not on followers
 
         """
+        try:
+            print('Checking if the information file exists...')
+            with open(f'info_user_{self.username}.json', 'r') as file:
+                f = json.load(file)
+                if f['Last update'] == str(datetime.date.today()):
+                    self.following = f['Following users']
+                    self.followers = f['Followers users']
+                    self.not_following_back = f['Not following back users']
+                    print('Found it.')
+                    return
+        except FileNotFoundError:
+            pass
         # Go the the user profile
         self.driver.find_element_by_xpath("//a[contains(@href,'/{}')]".format(self.username))\
             .click()
         sleep(2)
         # Go to the following page
+        print('Getting following users...')
         self.driver.find_element_by_xpath("//a[contains(@href,'/following')]")\
             .click()
         self.following = self._get_names()
         # Go to the followers page
+        print('Getting followers users...')
         self.driver.find_element_by_xpath("//a[contains(@href,'/followers')]")\
             .click()
         self.followers = self._get_names()
         # Creates the intersection
-        self.not_following_back = [user for user in following if user not in followers]
-        
+        self.not_following_back = [user for user in self.following if user not in self.followers]
+        # Save info
+        self.save_info()
 
     def _get_names(self):
         """
@@ -119,10 +141,9 @@ class InstaBot:
         This info contains the following, followers and not following back usernames
 
         """
-        # Save the info
-        self._get_info()
         # Creates the dict
         data = {}
+        data['Last update'] = str(datetime.date.today())
         data['Following users'] = self.following
         data['Followers users'] = self.followers
         data['Not following back users'] = self.not_following_back
