@@ -62,12 +62,11 @@ class InstaBot:
             print('Checking if the information file exists...')
             with open(f'info_user_{self.username}.json', 'r') as file:
                 f = json.load(file)
-                if f['Last update'] == str(datetime.date.today()):
-                    self.following = f['Following users']
-                    self.followers = f['Followers users']
-                    self.not_following_back = f['Not following back users']
-                    print('Found it.')
-                    return
+                self.following = f['Following users']
+                self.followers = f['Followers users']
+                self.not_following_back = f['Not following back users']
+                print('Found it.')
+                return
         except FileNotFoundError:
             pass
         # Go the the user profile
@@ -105,11 +104,12 @@ class InstaBot:
         last_ht, ht = 0, 1
         while last_ht != ht:
             last_ht = ht
-            sleep(1)
+            sleep(2)
             ht = self.driver.execute_script("""
                 arguments[0].scrollTo(0, arguments[0].scrollHeight); 
                 return arguments[0].scrollHeight;
                 """, scroll_box)
+            sleep(1)
         links = scroll_box.find_elements_by_tag_name('a')
         names = [name.text for name in links if name.text != '']
         # close button
@@ -143,7 +143,6 @@ class InstaBot:
         """
         # Creates the dict
         data = {}
-        data['Last update'] = str(datetime.date.today())
         data['Following users'] = self.following
         data['Followers users'] = self.followers
         data['Not following back users'] = self.not_following_back

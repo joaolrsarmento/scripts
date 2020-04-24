@@ -21,8 +21,11 @@ class Sorteio:
         self.link = link
         # Used usernames:
         self.used = []
-
-    def run(self, iterations):
+        # Comments per hour
+        self.comments_per_hour = 60
+        # Seconds per comment
+        self.seconds_per_comment = int(60 * 60 / self.comments_per_hour)
+    def run(self, quantity):
         """
         Run the script that comments iterations times.
         :param iterations: number of iterations that the script should run.
@@ -32,20 +35,49 @@ class Sorteio:
         # Acess the sorteio page
         self.account.driver.get(self.link)
         sleep(2)
-        for i in range(iterations):
-            print('Iteration', iterations)
-            # Get usernames to be used
-            usernames = self._get_random_usernames(2)
-            # Get text area
-            self.account.driver.find_element_by_xpath("//textarea[@placeholder=\"Adicione um comentário...\"]")\
-                .click()
-            # Put keys
-            self.account.driver.find_element_by_xpath("//textarea[@placeholder=\"Adicione um comentário...\"]")\
-                .send_keys(usernames)
-            # Send it out
-            self.account.driver.find_element_by_xpath("//button[contains(text(), 'Publicar')]")\
-                .click()
-            sleep(2)
+        # Counts the quantity of comments
+        count = 0
+        # Counts the time
+        get_time = 0
+        import time
+        before = time.time()
+        while True:
+            after = time.time()
+            get_time += after - before
+            before = after
+            if get_time >= self.seconds_per_comment:
+                # Get usernames to be used
+                usernames = self._get_random_usernames(quantity)
+                while True:
+                    try:
+                        # Get text area
+                        self.account.driver.find_element_by_xpath("//textarea[@placeholder=\"Adicione um comentário...\"]")\
+                            .click()
+                        # Put keys
+                        self.account.driver.find_element_by_xpath("//textarea[@placeholder=\"Adicione um comentário...\"]")\
+                            .send_keys(usernames)
+                        # Send it out
+                        self.account.driver.find_element_by_xpath("//button[contains(text(), 'Publicar')]")\
+                            .click()
+                        sleep(2)
+                        try:
+                            print('Checking error...')
+                            self.account.driver.find_element_by_xpath("//p[contains(text(), 'Não foi possível publicar o comentário.')]")
+                            print('Found error.')
+                            self.account.driver.refresh()
+                            sleep(5)
+                        except:
+                            pass
+                        break
+                    except:
+                        self.account.driver.refresh()
+                        sleep(5)
+
+                # Refresh
+                get_time = 0
+                count += 1
+                print(count)
+                
 
     def _get_random_usernames(self, quantity):
         """
@@ -62,10 +94,10 @@ class Sorteio:
 
         for i in range(quantity):
             # Generate a new random user
-            generate = self.account.followers[random.randint(0,len(self.account.followers))]
+            generate = self.account.followers[random.randint(0,len(self.account.followers)-1)]
             # Avoids using a repeated user
             while generate in self.used:
-                generate = self.account.followers[random.randint(0,len(self.account.followers))]
+                generate = self.account.followers[random.randint(0,len(self.account.followers)-1)]
             # Add the username
             usernames += f'@{generate} '
             # Saves the username used
