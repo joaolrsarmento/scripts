@@ -46,6 +46,12 @@ class InstaBot:
             sleep(2)
         except:
             pass
+        try: 
+            self.driver.find_element_by_xpath("//button[contains(text(), 'Agora não')]")\
+                .click()
+            sleep(2)
+        except:
+            pass
         # Saves info
         self._get_info()
 
@@ -55,7 +61,7 @@ class InstaBot:
         Infos saved:
             - followers: usernames that are followers
             - following: usernames that the account are following
-            - not_following_back: usernames that is on following but not on followers
+            - not_following_back: usernames that are on following but not on followers
 
         """
         try:
@@ -127,7 +133,7 @@ class InstaBot:
             self.driver.get('https://instagram.com/' + user)
             sleep(6)
             # Acess the possible actions
-            self.driver.find_element_by_xpath("//button[contains(text(), 'Seguindo')]")\
+            self.driver.find_element_by_xpath('/html/body/div[1]/section/main/div/header/section/div[2]/div[2]/span/span[1]/button')\
             .click()
             sleep(2)
             # Stop following
@@ -149,3 +155,7 @@ class InstaBot:
         # Saves the file
         with open(f'info_user_{self.username}.json', 'w') as file:
             json.dump(data, file)
+
+
+bot = InstaBot()
+bot.unfollow_unfollowers()
