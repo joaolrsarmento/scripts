@@ -1,1 +1,1 @@
-# Script made to unfollow people that doesn't follow you back on instagram
+# Contains a class that represents an instagram account and some useful methods
